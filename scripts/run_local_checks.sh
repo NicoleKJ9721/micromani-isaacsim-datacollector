@@ -13,6 +13,7 @@ python3 -m py_compile \
   isaacsim_tools/micromani_replay_lerobot.py \
   isaacsim_tools/micromani_pico_gateway.py \
   isaacsim_tools/micromani_pico_mapping.py \
+  isaacsim_tools/test_micromani_plugin_buttons.py \
   exts/micromani.data_collector/micromani/data_collector/extension.py
 
 bash -n \

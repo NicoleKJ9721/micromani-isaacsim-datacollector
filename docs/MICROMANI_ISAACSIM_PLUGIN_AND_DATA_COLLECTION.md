@@ -1,6 +1,6 @@
 # MicroMani Isaac Sim 插件、配置与数据采集说明
 
-更新时间：2026-07-03 03:50 CST
+更新时间：2026-07-03
 
 ## 1. 项目目标
 
@@ -199,13 +199,13 @@ isaacsim_tools/backup_cloud_instance.sh
 scripts/run_local_checks.sh
 ```
 
-该脚本会检查 Python/Shell 语法、14 维控制 schema、URDF 夹爪相对运动、HKVL-36 参数、插件按钮、PICO-4 网关文件、文档覆盖项和已有 LeRobot v3 数据集结构。
+该脚本会检查 Python/Shell 语法、14 维控制 schema、URDF 夹爪相对运动、HKVL-36 参数、插件按钮测试脚本、PICO-4 网关文件、文档覆盖项和已有 LeRobot v3 数据集结构。
 
 ## 10. 当前验证状态
 
-最终已验证 session：`micromani_quality_20260703_01`。
+最新从 URDF 重新导入开始的全链路复测 session：`micromani_import_validation_20260703_02`。
 
-- 采集帧数：6。
+- 采集帧数：8。
 - FPS：30。
 - `observation.state`：14 维。
 - `action`：14 维。
@@ -213,18 +213,21 @@ scripts/run_local_checks.sh
 - 三路相机重载后均为 `3x480x640`。
 - 力/力矩 sidecar 已生成 JSONL、CSV 和 metadata。
 - 左右 HKVL-36A 饱和计数均为 0。
-- LeRobot action 回放到 Isaac TCP 控制桥：发送 6 帧，收到 6 个 ACK，无错误。
-- 最新本地备份：`backups/cloud-isaacsim-20260703-032622`。
+- LeRobot action 回放到 Isaac TCP 控制桥：发送 8 帧，收到 8 个 ACK，无错误。
+- 最新导入报告：`outputs/micromani_import_validation_report_20260703.json`。
+- 最新插件按钮报告：`outputs/micromani_plugin_button_report_20260703.json`。
+- 最新本地备份：`backups/cloud-isaacsim-20260703-034013`。
 - Isaac Sim extension 加载验证：云端 Isaac Sim 5.1 headless 环境中已成功启用并关闭 `micromani.data_collector-0.1.0`。
 - Isaac Sim extension UI 验证：云端 headless 环境中直接构建插件窗口，`visible=True`，状态为 `Ready.`。
 - PICO 网关按钮验证：云端 headless 环境中通过插件方法启动 PICO gateway，进程 `running=True`；停止后 `stopped=True`。
-- 本地 LeRobot 重载验证：`LeRobotDataset(..., return_uint8=True)` 可加载 6 帧数据，三路图像 shape 均为 `3x480x640`，力/力矩 shape 为 `12`。
+- 本地 LeRobot 重载验证：`LeRobotDataset(..., return_uint8=True)` 可加载 8 帧数据，三路图像 shape 均为 `3x480x640`，力/力矩 shape 为 `12`。
 - PICO-4 网关：本地模拟 UDP 输入已验证能转发 14 维 `axes`；插件按钮已验证可启动/停止网关；PICO-4 实机输入尚未验证。
+- 详细复测报告：`docs/FUNCTIONAL_TEST_REPORT_20260703.md`。
 
 ## 11. 当前限制
 
 - 当前 PICO-4 Unity/OpenXR 发送端和网关已经实现为工程模板，但没有 PICO-4 头显/手柄实机在本轮环境中可供联调。因此“协议和代码已具备”，但“PICO-4 实机可操作性”仍需拿设备验证。
 - 公网 TCP `49011` 可以建立 socket，但没有稳定返回桥接 ACK；当前端到端回放通过 SSH 本地隧道连接云端 `127.0.0.1:49011`。
-- 两个腕部相机已经能采集夹爪区域，但画面偏暗且有局部遮挡。大规模数据采集前建议继续调光照、材质和相机外参。
+- 两个腕部相机已经能采集夹爪区域，数据不是空帧；当前画面偏暗且有局部遮挡。大规模数据采集前建议继续调光照、材质和相机外参。
 - HKVL-36 硬件支持高于 30 Hz 的采样；当前数据集保存的是与策略控制和相机同步的 30 Hz 力觉观测。若以后做高频力控，可增加一个高频 force sidecar。
 - `Run E2E Smoke` 当前优先服务“本地 Mac 控制云端 Isaac Sim”的流程。迁移到专用采集电脑时，建议新增本机 Isaac Sim pipeline，避免 SSH 依赖。

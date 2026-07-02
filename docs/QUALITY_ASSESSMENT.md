@@ -1,6 +1,6 @@
 # MicroMani Isaac Sim 交付质量评估
 
-更新时间：2026-07-03 03:55 CST
+更新时间：2026-07-03
 
 ## 结论
 
@@ -20,7 +20,7 @@
 | 两个 HKVL-36 六维力/力矩传感器 | 已完成 | 左右 `joint6` 读取 12 维力/力矩，sidecar 生成 |
 | LeRobot 数据采集流程 | 已完成 | `LeRobotDataset` 可加载，v3 metadata/parquet 存在 |
 | 力数据必须随采集保存 | 已完成 | `observation.force_torque` + JSONL/CSV/metadata sidecar |
-| 分步测试和联合测试 | 已完成 | 本地检查、PICO 模拟、扩展加载/UI、6 帧联合链路 |
+| 分步测试和联合测试 | 已完成 | 从 URDF 重新导入开始，完成插件按钮、PICO 模拟、8 帧采集转换回放 |
 | Isaac Sim 插件 | 已完成 | `micromani.data_collector-0.1.0` 可启用，UI 可构建 |
 | 插件常用按钮 | 已完成 | 场景、保存、相机、HKVL-36、桥、PICO 网关、烟测、数据目录、文档、状态 |
 | PICO-4 通讯预留 | 已完成到工程预集成 | Unity/OpenXR sender + UDP gateway + 14D mapper；实机未验证 |
@@ -30,13 +30,13 @@
 ## 最新验证证据
 
 - 本地项目验收：`scripts/run_local_checks.sh` 通过。
-- PICO 网关本地模拟：UDP 输入转发为 `axes_len=14`。
-- 云端 Isaac Sim 插件：`enable_result=True`，`enabled=True`，`disabled=True`。
-- 云端插件 UI 构建：`visible=True`，状态 `Ready.`。
-- 云端插件 PICO 网关按钮：启动 `running=True`，停止 `stopped=True`。
-- 端到端数据链路 session：`micromani_quality_20260703_01`。
-- LeRobot 数据集：6 帧，30 FPS，`observation.state=14D`，`action=14D`，`observation.force_torque=12D`，三路图像均为 `3x480x640`。
-- 回放到 Isaac 控制桥：发送 6 帧，收到 6 个 ACK，无错误。
+- PICO 网关本地模拟：UDP 输入转发为 `axes_len=14`，网关状态 `packets_received=1`、`packets_forwarded=1`。
+- 云端插件按钮报告：`ui_visible=True`、场景打开 `ok=True`、相机/HKVL-36 配置按钮成功、PICO 网关启动/停止成功。
+- 从 URDF 重新导入的场景：原始 DOF `16`，有效控制 DOF `14`，碰撞 prim `20`，mimic prim `2`。
+- 端到端数据链路 session：`micromani_import_validation_20260703_02`。
+- LeRobot 数据集：8 帧，30 FPS，`observation.state=14D`，`action=14D`，`observation.force_torque=12D`，三路图像均为 `3x480x640`。
+- 回放到 Isaac 控制桥：发送 8 帧，收到 8 个 ACK，无错误。
+- 详细证据文档：`docs/FUNCTIONAL_TEST_REPORT_20260703.md`。
 
 ## 维度评分
 

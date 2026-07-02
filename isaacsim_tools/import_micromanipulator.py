@@ -1,6 +1,7 @@
 import json
 import math
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -18,6 +19,41 @@ URDF_PATH = Path(os.environ.get("MICROMANI_URDF", ASSET_ROOT / "urdf" / "microma
 OUT_DIR = Path(os.environ.get("MICROMANI_OUT_DIR", "/isaac-sim/.local/share/ov/data/micromani"))
 OUT_USD = Path(os.environ.get("MICROMANI_OUT_USD", OUT_DIR / "micromanipulator_scene.usd"))
 REPORT_PATH = Path(os.environ.get("MICROMANI_REPORT", OUT_DIR / "micromanipulator_import_report.json"))
+
+
+def package_names_from_urdf(path):
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    return sorted(set(re.findall(r"package://([^/]+)/", text)))
+
+
+def configure_ros_package_path(asset_root, urdf_path, out_dir):
+    package_names = package_names_from_urdf(urdf_path)
+    search_paths = []
+    if asset_root.name in package_names:
+        search_paths.append(str(asset_root.parent))
+    missing_aliases = [name for name in package_names if name != asset_root.name]
+    if missing_aliases:
+        alias_root = out_dir / "_ros_package_path"
+        alias_root.mkdir(parents=True, exist_ok=True)
+        for package_name in missing_aliases:
+            alias_path = alias_root / package_name
+            if alias_path.exists() or alias_path.is_symlink():
+                if alias_path.is_symlink() or alias_path.is_file():
+                    alias_path.unlink()
+            if not alias_path.exists():
+                try:
+                    alias_path.symlink_to(asset_root, target_is_directory=True)
+                except OSError:
+                    import shutil
+
+                    shutil.copytree(asset_root, alias_path, dirs_exist_ok=True)
+        search_paths.append(str(alias_root))
+    existing = os.environ.get("ROS_PACKAGE_PATH")
+    if existing:
+        search_paths.append(existing)
+    if search_paths:
+        os.environ["ROS_PACKAGE_PATH"] = os.pathsep.join(search_paths)
+    return {"package_names": package_names, "ros_package_path": os.environ.get("ROS_PACKAGE_PATH")}
 
 
 def vec_norm(v):
@@ -128,6 +164,8 @@ def add_camera(stage, path, eye, target, view_width_m, resolution, fps, parent_n
 
 
 def main():
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    package_resolution = configure_ros_package_path(ASSET_ROOT, URDF_PATH, OUT_DIR)
     kit = SimulationApp({"headless": True, "renderer": "RaytracedLighting"})
 
     import omni.kit.commands
@@ -136,7 +174,6 @@ def main():
     from isaacsim.core.prims import Articulation
     from pxr import Gf, PhysicsSchemaTools, PhysxSchema, Sdf, Usd, UsdGeom, UsdLux, UsdPhysics
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
     if OUT_USD.exists():
         OUT_USD.unlink()
 
@@ -293,6 +330,7 @@ def main():
     report = {
         "asset_root": str(ASSET_ROOT),
         "urdf_path": str(URDF_PATH),
+        "package_resolution": package_resolution,
         "usd_path": str(OUT_USD),
         "import_returned_prim_path": str(prim_path),
         "articulation_root": articulation_root_path,

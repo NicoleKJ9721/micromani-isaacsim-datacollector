@@ -29,6 +29,7 @@ See the full guide:
 - [Quality Assessment](docs/QUALITY_ASSESSMENT.md)
 - [Cloud Isaac Sim Progress](docs/cloud_isaacsim_progress.md)
 - [LeRobot Collection Plan](docs/micromani_lerobot_collection_plan.md)
+- [Functional Test Report 2026-07-03](docs/FUNCTIONAL_TEST_REPORT_20260703.md)
 
 Run local delivery checks:
 
@@ -36,17 +37,18 @@ Run local delivery checks:
 scripts/run_local_checks.sh
 ```
 
-## Current Verified Smoke Test
+## Current Verified Full Retest
 
-- Session: `micromani_quality_20260703_01`
-- Frames: 6
+- Session: `micromani_import_validation_20260703_02`
+- Scope: re-import URDF -> configure scene -> plugin button smoke -> collect raw data -> convert LeRobot -> replay actions
+- Frames: 8
 - FPS: 30
 - `observation.state`: 14D
 - `action`: 14D
 - `observation.force_torque`: 12D
 - Cameras: three `3x480x640` tensors after LeRobot reload
-- Replay: 6 frames sent, 6 ACKs, no replay errors
-- Extension: cloud Isaac Sim 5.1 headless enable/disable and UI build smoke tests passed
+- Replay: 8 frames sent, 8 ACKs, no replay errors
+- Extension: cloud Isaac Sim 5.1 headless button-path smoke test passed
 - PICO gateway: local UDP forwarding and cloud plugin start/stop smoke tests passed
 
 ## PICO-4 Teleoperation Stub

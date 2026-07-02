@@ -1,6 +1,6 @@
 # Isaac Sim 云端开发进度
 
-更新时间：2026-07-03 03:26:33 CST
+更新时间：2026-07-03 03:40:27 CST
 
 ## 当前目标
 
@@ -30,7 +30,7 @@
 
 ## 备份位置
 
-本次云端备份目录：`/Users/nikejian/Projects/MicroManiURDF/backups/cloud-isaacsim-20260703-032622`
+本次云端备份目录：`/Users/nikejian/Projects/MicroManiURDF/backups/cloud-isaacsim-20260703-034013`
 
 ## 导入检查结果
 
@@ -81,27 +81,27 @@
 
 - UDP 端口：`49010`
 - TCP 端口：`49011`
-- 已接收控制包：`36`
-- 最近来源：`tcp:127.0.0.1:47482`
+- 已接收控制包：`44`
+- 最近来源：`tcp:127.0.0.1:43250`
 - 最近错误：`None`
 
 ## LeRobot 数据采集闭环
 
 - 已参照 LeRobot 的记录流程完成虚拟微纳机器人数据采集链路：读取观测、生成动作、发送动作、保存观测/动作帧、转换成 LeRobot v3 数据集、再回放到 Isaac Sim。
 - 当前数据结构包含视觉、14 维状态、14 维动作和 12 维左右腕 HKVL-36 力/力矩。
-- 最终联合测试 session：`micromani_quality_20260703_01`。
-- 原始数据：`/Users/nikejian/Projects/MicroManiURDF/datasets/raw/micromani_quality_20260703_01`。
-- LeRobot 数据集：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_quality_20260703_01`。
+- 最终联合测试 session：`micromani_import_validation_20260703_02`。
+- 原始数据：`/Users/nikejian/Projects/MicroManiURDF/datasets/raw/micromani_import_validation_20260703_02`。
+- LeRobot 数据集：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02`。
 - 验证结果：
-  - 采集帧数：`6`
+  - 采集帧数：`8`
   - FPS：`30`
   - `observation.state`：`14` 维
   - `action`：`14` 维
   - `observation.force_torque`：`12` 维
   - 三路相机重载后均为 `3x480x640`
-  - 力/力矩 sidecar：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_quality_20260703_01/force_torque/episode_000000.jsonl`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_quality_20260703_01/force_torque/episode_000000.csv`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_quality_20260703_01/force_torque/metadata.json`
+  - 力/力矩 sidecar：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02/force_torque/episode_000000.jsonl`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02/force_torque/episode_000000.csv`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02/force_torque/metadata.json`
   - 左右 HKVL-36A 传感器饱和计数：`left=0, right=0`
-  - 回放到 Isaac TCP 控制桥：发送 `6` 帧，收到 `6` 个 ACK，错误 `[]`
+  - 回放到 Isaac TCP 控制桥：发送 `8` 帧，收到 `8` 个 ACK，错误 `[]`
 
 ### 当前限制
 

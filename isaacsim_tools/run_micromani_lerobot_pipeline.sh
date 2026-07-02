@@ -10,7 +10,7 @@ REMOTE_ISAAC_DIR="/isaac-sim/.local/share/ov/data/micromani"
 LOCAL_RAW_DIR="${MICROMANI_LOCAL_RAW_DIR:-$ROOT_DIR/datasets/raw}"
 LOCAL_LEROBOT_DIR="${MICROMANI_LOCAL_LEROBOT_DIR:-$ROOT_DIR/datasets/lerobot/micromani_isaac_smoke}"
 REPORT_DIR="${MICROMANI_REPORT_DIR:-$ROOT_DIR/outputs}"
-LEROBOT_PYTHON="${LEROBOT_PYTHON:-/opt/homebrew/Caskroom/mambaforge/base/envs/lerobot/bin/python}"
+LEROBOT_PYTHON="${LEROBOT_PYTHON:-}"
 FRAMES="${MICROMANI_FRAMES:-18}"
 FPS="${MICROMANI_FPS:-30}"
 SESSION_NAME="${MICROMANI_SESSION_NAME:-micromani_smoke_$(date +%Y%m%d_%H%M%S)}"
@@ -22,6 +22,29 @@ FT_MODEL="${MICROMANI_FT_MODEL:-HKVL-36A}"
 SSH=(ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no -o BatchMode=yes "$REMOTE_USER@$REMOTE_HOST")
 SCP=(scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -o BatchMode=yes)
 RSYNC=(rsync -az -e "ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o BatchMode=yes")
+
+detect_lerobot_python() {
+  if [[ -n "$LEROBOT_PYTHON" ]]; then
+    printf '%s\n' "$LEROBOT_PYTHON"
+    return 0
+  fi
+  local candidates=(
+    "$ROOT_DIR/.venv/bin/python"
+    "/opt/homebrew/Caskroom/mambaforge/base/envs/lerobot/bin/python"
+    "$(command -v python3 || true)"
+  )
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if [[ -x "$candidate" ]] && "$candidate" -c 'import lerobot' >/dev/null 2>&1; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  echo "Could not find a Python interpreter with lerobot installed. Set LEROBOT_PYTHON=/path/to/python." >&2
+  return 1
+}
+
+LEROBOT_PYTHON="$(detect_lerobot_python)"
 
 mkdir -p "$LOCAL_RAW_DIR" "$REPORT_DIR"
 

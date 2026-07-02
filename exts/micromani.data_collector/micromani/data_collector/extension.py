@@ -36,6 +36,8 @@ class Extension(omni.ext.IExt):
         self._bridge_module = None
         self._process = None
         self._process_log = None
+        self._pico_process = None
+        self._pico_log = None
         self._status_label = None
 
         self._project_root_model = ui.SimpleStringModel(str(self._project_root))
@@ -63,6 +65,7 @@ class Extension(omni.ext.IExt):
 
     def on_shutdown(self):
         self._stop_bridge()
+        self._stop_pico_gateway()
         if self._process and self._process.poll() is None:
             self._process.terminate()
         remove_menu_items(self._menu_items, "Tools")
@@ -107,6 +110,10 @@ class Extension(omni.ext.IExt):
                 with ui.HStack(spacing=8):
                     ui.Button("Start Bridge", clicked_fn=self._start_bridge)
                     ui.Button("Stop Bridge", clicked_fn=self._stop_bridge)
+
+                with ui.HStack(spacing=8):
+                    ui.Button("Start PICO Gateway", clicked_fn=self._start_pico_gateway)
+                    ui.Button("Stop PICO Gateway", clicked_fn=self._stop_pico_gateway)
 
                 with ui.HStack(spacing=8):
                     ui.Button("Run E2E Smoke", clicked_fn=self._run_smoke_pipeline)
@@ -311,6 +318,43 @@ class Extension(omni.ext.IExt):
         self._process = subprocess.Popen([str(script)], cwd=str(root), env=env, stdout=log_fp, stderr=subprocess.STDOUT)
         threading.Thread(target=self._watch_process, args=(session, log_fp), daemon=True).start()
         self._set_status(f"Started E2E smoke pipeline: {session}. Log: {log_path}")
+
+    def _start_pico_gateway(self):
+        root = self._root()
+        script = root / "isaacsim_tools" / "micromani_pico_gateway.py"
+        if not script.exists():
+            self._set_status(f"Missing PICO gateway script: {script}")
+            return
+        if self._pico_process and self._pico_process.poll() is None:
+            self._set_status("PICO gateway is already running.")
+            return
+        log_path = root / "outputs" / "micromani_pico_gateway.log"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        self._pico_log = log_path
+        log_fp = log_path.open("w", encoding="utf-8")
+        self._pico_process = subprocess.Popen(
+            [sys.executable, str(script)],
+            cwd=str(root),
+            stdout=log_fp,
+            stderr=subprocess.STDOUT,
+        )
+        threading.Thread(target=self._watch_pico_gateway, args=(log_fp,), daemon=True).start()
+        self._set_status(f"Started PICO gateway on UDP 49100. Log: {log_path}")
+
+    def _watch_pico_gateway(self, log_fp):
+        code = self._pico_process.wait()
+        log_fp.close()
+        self._set_status(f"PICO gateway exited with code {code}. Log: {self._pico_log}")
+
+    def _stop_pico_gateway(self):
+        if self._pico_process is None or self._pico_process.poll() is not None:
+            return
+        self._pico_process.terminate()
+        try:
+            self._pico_process.wait(timeout=3.0)
+        except subprocess.TimeoutExpired:
+            self._pico_process.kill()
+        self._set_status("PICO gateway stop requested.")
 
     def _watch_process(self, session: str, log_fp):
         code = self._process.wait()

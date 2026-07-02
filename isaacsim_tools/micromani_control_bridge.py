@@ -1,6 +1,7 @@
 import json
 import queue
 import socket
+import sys
 import threading
 import time
 from pathlib import Path
@@ -12,36 +13,17 @@ import omni.usd
 from isaacsim.core.prims import Articulation
 from isaacsim.core.utils.types import ArticulationAction
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
-ARTICULATION_ROOT = "/micromanipulator/root_joint"
-STAGE_PATH = "/isaac-sim/.local/share/ov/data/micromani/micromanipulator_scene.usd"
+from micromani_lerobot_schema import ARTICULATION_ROOT, CONTROL_ORDER, GRIPPER_MAP, STAGE_PATH  # noqa: E402
+
 UDP_HOST = "0.0.0.0"
 UDP_PORT = 49010
 TCP_HOST = "0.0.0.0"
 TCP_PORT = 49011
 STATUS_PATH = Path("/isaac-sim/.local/share/ov/data/micromani/micromani_bridge_status.json")
-
-CONTROL_ORDER = [
-    "joint1_left",
-    "joint2_left",
-    "joint3_left",
-    "joint4_left",
-    "joint5_left",
-    "joint6_left",
-    "left_gripper",
-    "joint1_right",
-    "joint2_right",
-    "joint3_right",
-    "joint4_right",
-    "joint5_right",
-    "joint6_right",
-    "right_gripper",
-]
-
-GRIPPER_MAP = {
-    "left_gripper": ["joint_finger1_left", "joint_finger2_left"],
-    "right_gripper": ["joint_finger1_right", "joint_finger2_right"],
-}
 
 
 class MicroManiControlBridge:
@@ -59,6 +41,8 @@ class MicroManiControlBridge:
         self.started_at = time.time()
         self.stage_open_requested = False
         self._stop = threading.Event()
+        self._sockets = []
+        self._sockets_lock = threading.Lock()
         self._udp_thread = threading.Thread(target=self._udp_loop, name="micromani-udp", daemon=True)
         self._tcp_thread = threading.Thread(target=self._tcp_loop, name="micromani-tcp", daemon=True)
         self._subscription = omni.kit.app.get_app().get_update_event_stream().create_subscription_to_pop(
@@ -69,47 +53,86 @@ class MicroManiControlBridge:
         self._write_status()
         print(f"[micromani] control bridge listening on UDP {UDP_PORT} and TCP {TCP_PORT}")
 
+    def _register_socket(self, sock):
+        with self._sockets_lock:
+            self._sockets.append(sock)
+
+    def _unregister_socket(self, sock):
+        with self._sockets_lock:
+            if sock in self._sockets:
+                self._sockets.remove(sock)
+
     def _udp_loop(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind((UDP_HOST, UDP_PORT))
-        sock.settimeout(0.5)
-        while not self._stop.is_set():
+        self._register_socket(sock)
+        try:
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            sock.bind((UDP_HOST, UDP_PORT))
+            sock.settimeout(0.5)
+            while not self._stop.is_set():
+                try:
+                    data, addr = sock.recvfrom(65535)
+                except socket.timeout:
+                    continue
+                except OSError:
+                    if self._stop.is_set():
+                        break
+                    raise
+                except Exception as exc:
+                    self.last_error = f"udp: {exc}"
+                    continue
+                self._submit_packet(data, f"udp:{addr[0]}:{addr[1]}")
+        finally:
+            self._unregister_socket(sock)
             try:
-                data, addr = sock.recvfrom(65535)
-            except socket.timeout:
-                continue
-            except Exception as exc:
-                self.last_error = f"udp: {exc}"
-                continue
-            self._submit_packet(data, f"udp:{addr[0]}:{addr[1]}")
+                sock.close()
+            except Exception:
+                pass
 
     def _tcp_loop(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind((TCP_HOST, TCP_PORT))
-        server.listen(4)
-        server.settimeout(0.5)
-        while not self._stop.is_set():
+        self._register_socket(server)
+        try:
+            server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            server.bind((TCP_HOST, TCP_PORT))
+            server.listen(4)
+            server.settimeout(0.5)
+            while not self._stop.is_set():
+                try:
+                    conn, addr = server.accept()
+                except socket.timeout:
+                    continue
+                except OSError:
+                    if self._stop.is_set():
+                        break
+                    raise
+                except Exception as exc:
+                    self.last_error = f"tcp: {exc}"
+                    continue
+                self._register_socket(conn)
+                threading.Thread(target=self._tcp_client, args=(conn, addr), daemon=True).start()
+        finally:
+            self._unregister_socket(server)
             try:
-                conn, addr = server.accept()
-            except socket.timeout:
-                continue
-            except Exception as exc:
-                self.last_error = f"tcp: {exc}"
-                continue
-            threading.Thread(target=self._tcp_client, args=(conn, addr), daemon=True).start()
+                server.close()
+            except Exception:
+                pass
 
     def _tcp_client(self, conn, addr):
-        with conn:
-            conn_file = conn.makefile("rwb")
-            for raw_line in conn_file:
-                self._submit_packet(raw_line, f"tcp:{addr[0]}:{addr[1]}")
-                try:
-                    conn_file.write(json.dumps({"ok": True, "time": time.time()}).encode("utf-8") + b"\n")
-                    conn_file.flush()
-                except Exception:
-                    break
+        try:
+            with conn:
+                conn_file = conn.makefile("rwb")
+                for raw_line in conn_file:
+                    ok, error = self._submit_packet(raw_line, f"tcp:{addr[0]}:{addr[1]}")
+                    try:
+                        conn_file.write(
+                            json.dumps({"ok": ok, "error": error, "time": time.time()}).encode("utf-8") + b"\n"
+                        )
+                        conn_file.flush()
+                    except Exception:
+                        break
+        finally:
+            self._unregister_socket(conn)
 
     def _submit_packet(self, data, source):
         try:
@@ -122,8 +145,10 @@ class MicroManiControlBridge:
             self.packet_count += 1
             self.last_packet = packet
             self.last_source = source
+            return True, None
         except Exception as exc:
             self.last_error = f"packet: {exc}"
+            return False, self.last_error
 
     def _initialize_robot(self):
         if self.robot is not None:
@@ -260,6 +285,16 @@ class MicroManiControlBridge:
     def stop(self):
         self._stop.set()
         self._subscription = None
+        with self._sockets_lock:
+            sockets = list(self._sockets)
+        for sock in sockets:
+            try:
+                sock.close()
+            except Exception:
+                pass
+        for thread in (self._udp_thread, self._tcp_thread):
+            if thread.is_alive():
+                thread.join(timeout=1.0)
         self._write_status()
 
 

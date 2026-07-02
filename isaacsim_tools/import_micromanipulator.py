@@ -1,9 +1,16 @@
 import json
 import math
 import os
+import sys
 from pathlib import Path
 
 from isaacsim import SimulationApp
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from micromani_lerobot_schema import CONTROL_ORDER, GRIPPER_MAP, RAW_DOF_NAMES  # noqa: E402
 
 
 ASSET_ROOT = Path(os.environ.get("MICROMANI_ASSET_ROOT", "/tmp/micromanipulator_isaac"))
@@ -283,40 +290,6 @@ def main():
     finally:
         omni.timeline.get_timeline_interface().stop()
 
-    expected_raw_actuated = [
-        "joint1_left",
-        "joint2_left",
-        "joint3_left",
-        "joint4_left",
-        "joint5_left",
-        "joint6_left",
-        "joint_finger1_left",
-        "joint_finger2_left",
-        "joint1_right",
-        "joint2_right",
-        "joint3_right",
-        "joint4_right",
-        "joint5_right",
-        "joint6_right",
-        "joint_finger1_right",
-        "joint_finger2_right",
-    ]
-    control_order = [
-        "joint1_left",
-        "joint2_left",
-        "joint3_left",
-        "joint4_left",
-        "joint5_left",
-        "joint6_left",
-        "left_gripper",
-        "joint1_right",
-        "joint2_right",
-        "joint3_right",
-        "joint4_right",
-        "joint5_right",
-        "joint6_right",
-        "right_gripper",
-    ]
     report = {
         "asset_root": str(ASSET_ROOT),
         "urdf_path": str(URDF_PATH),
@@ -328,13 +301,10 @@ def main():
         "articulation_error": articulation_error,
         "num_dof": num_dof,
         "dof_names": dof_names,
-        "expected_raw_actuated_dofs": len(expected_raw_actuated),
-        "expected_effective_control_dofs": len(control_order),
-        "control_order": control_order,
-        "gripper_map": {
-            "left_gripper": ["joint_finger1_left", "joint_finger2_left"],
-            "right_gripper": ["joint_finger1_right", "joint_finger2_right"],
-        },
+        "expected_raw_actuated_dofs": len(RAW_DOF_NAMES),
+        "expected_effective_control_dofs": len(CONTROL_ORDER),
+        "control_order": list(CONTROL_ORDER),
+        "gripper_map": {key: list(value) for key, value in GRIPPER_MAP.items()},
         "joint_prim_count": len(joint_prims),
         "joint_prims": joint_prims,
         "collision_prim_count": len(collision_prims),

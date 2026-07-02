@@ -11,11 +11,15 @@ python3 -m py_compile \
   isaacsim_tools/micromani_configure_ft_sensors.py \
   isaacsim_tools/micromani_convert_to_lerobot.py \
   isaacsim_tools/micromani_replay_lerobot.py \
+  isaacsim_tools/micromani_pico_gateway.py \
+  isaacsim_tools/micromani_pico_mapping.py \
   exts/micromani.data_collector/micromani/data_collector/extension.py
 
 bash -n \
   isaacsim_tools/run_micromani_lerobot_pipeline.sh \
   isaacsim_tools/backup_cloud_instance.sh \
   scripts/install_isaac_extension.sh
+
+python3 scripts/validate_project_delivery.py
 
 echo "Local checks passed."

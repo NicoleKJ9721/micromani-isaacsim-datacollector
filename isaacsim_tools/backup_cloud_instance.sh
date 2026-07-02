@@ -84,6 +84,7 @@ BRIDGE="${BACKUP_DIR}/remote/isaac-sim-data-micromani/micromani_bridge_status.js
 FT_REPORT="${BACKUP_DIR}/remote/isaac-sim-data-micromani/hkvl36_force_torque_sensors.json"
 PIPELINE_REPORT="${PROJECT_ROOT}/outputs/micromani_pipeline_report.json"
 REPLAY_REPORT="${PROJECT_ROOT}/outputs/micromani_replay_report.json"
+BUILD_VALIDATION_REPORT="${MICROMANI_BUILD_VALIDATION_REPORT:-${PROJECT_ROOT}/outputs/micromani_build_validation_20260703.json}"
 
 cat > "${PROGRESS_DOC}" <<EOF
 # Isaac Sim 云端开发进度
@@ -251,6 +252,39 @@ print("- 启动方式：`isaac-sim.sh --ext-folder /path/to/MicroManiURDF/exts -
 print("- 菜单入口：`Tools > MicroMani > MicroMani Data Collector`。")
 print("- 常用按钮：打开场景、保存场景、配置相机、配置 HKVL-36、启动/停止控制桥、启动/停止 PICO 网关、运行端到端烟测、打开数据目录、打开文档。")
 print("- 验证状态：云端 Isaac Sim 5.1 headless 环境中成功启用/关闭 `micromani.data_collector-0.1.0`，UI 构建通过，PICO 网关按钮启动/停止通过。")
+print()
+PY
+fi
+
+if command -v python3 >/dev/null 2>&1 && [ -f "${BUILD_VALIDATION_REPORT}" ]; then
+  python3 - "${BUILD_VALIDATION_REPORT}" >> "${PROGRESS_DOC}" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+report = json.loads(Path(sys.argv[1]).read_text())
+checks = report.get("checks", {})
+articulation = report.get("articulation", {})
+stage_summary = report.get("stage_summary", {})
+force = report.get("force_torque_runtime_sample", {})
+cameras = report.get("camera_runtime_sample", {})
+grippers = report.get("gripper_command_validation", {})
+
+print("## 当前主场景构建验收")
+print()
+print(f"- 验收报告：`outputs/micromani_build_validation_20260703.json`")
+print(f"- `build_success`：`{report.get('build_success')}`")
+print(f"- 硬性检查全部通过：`{all(checks.values()) if checks else False}`")
+print(f"- Articulation 物理句柄：`{articulation.get('physics_handle_valid')}`")
+print(f"- 原始 DOF：`{articulation.get('num_dof')}`")
+print(f"- 有效控制 DOF：`{articulation.get('expected_effective_control_dofs')}`")
+print(f"- 碰撞 prim：`{stage_summary.get('collision_prim_count')}`")
+print(f"- mesh prim：`{stage_summary.get('mesh_prim_count')}`")
+print(f"- HKVL-36 运行时力/力矩维度：`{force.get('vector_len')}`，有限值：`{force.get('finite')}`，饱和：`{force.get('saturated_any')}`")
+for name, item in grippers.items():
+    print(f"- `{name}` 夹爪运行误差：`{item.get('max_abs_error')}` m，收敛步数 `{item.get('settle_frames')}`")
+for name, item in cameras.items():
+    print(f"- `{name}` 相机：shape `{item.get('shape')}`，非空 `{item.get('non_empty')}`，mean `{item.get('mean')}`")
 print()
 PY
 fi

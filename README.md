@@ -37,17 +37,18 @@ Run local delivery checks:
 scripts/run_local_checks.sh
 ```
 
-## Current Verified Full Retest
+## Current Verified Build And Data Retest
 
-- Session: `micromani_import_validation_20260703_02`
-- Scope: re-import URDF -> configure scene -> plugin button smoke -> collect raw data -> convert LeRobot -> replay actions
-- Frames: 8
+- Build report: `outputs/micromani_build_validation_20260703.json`, `build_success=true`
+- Data session: `micromani_build_verify_20260703_01`
+- Scope: open current primary USD -> initialize articulation physics -> command grippers -> render cameras -> read force/torque -> collect raw data -> convert LeRobot -> replay actions
+- Frames: 6
 - FPS: 30
 - `observation.state`: 14D
 - `action`: 14D
 - `observation.force_torque`: 12D
 - Cameras: three `3x480x640` tensors after LeRobot reload
-- Replay: 8 frames sent, 8 ACKs, no replay errors
+- Replay: 6 frames sent, 6 ACKs, no replay errors
 - Extension: cloud Isaac Sim 5.1 headless button-path smoke test passed
 - PICO gateway: local UDP forwarding and cloud plugin start/stop smoke tests passed
 

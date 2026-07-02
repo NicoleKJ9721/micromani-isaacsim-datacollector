@@ -177,6 +177,14 @@ Unity/PICO-4 端把 `pico4_unity/MicroManiPicoTeleop.cs` 加到场景中的 Game
 scripts/run_local_checks.sh
 ```
 
+当前主场景构建验收：
+
+```bash
+/isaac-sim/python.sh /isaac-sim/.local/share/ov/data/micromani/isaacsim_tools/validate_micromani_build.py \
+  --stage /isaac-sim/.local/share/ov/data/micromani/micromanipulator_scene.usd \
+  --report /isaac-sim/.local/share/ov/data/micromani/micromani_build_validation_20260703.json
+```
+
 端到端烟测：
 
 ```bash
@@ -203,9 +211,11 @@ scripts/run_local_checks.sh
 
 ## 10. 当前验证状态
 
-最新从 URDF 重新导入开始的全链路复测 session：`micromani_import_validation_20260703_02`。
+最新当前主场景构建验收报告：`outputs/micromani_build_validation_20260703.json`，结果为 `build_success=true`。
 
-- 采集帧数：8。
+最新当前主场景数据闭环 session：`micromani_build_verify_20260703_01`。
+
+- 采集帧数：6。
 - FPS：30。
 - `observation.state`：14 维。
 - `action`：14 维。
@@ -213,14 +223,23 @@ scripts/run_local_checks.sh
 - 三路相机重载后均为 `3x480x640`。
 - 力/力矩 sidecar 已生成 JSONL、CSV 和 metadata。
 - 左右 HKVL-36A 饱和计数均为 0。
-- LeRobot action 回放到 Isaac TCP 控制桥：发送 8 帧，收到 8 个 ACK，无错误。
+- LeRobot action 回放到 Isaac TCP 控制桥：发送 6 帧，收到 6 个 ACK，无错误。
+- 当前主场景硬性验收：
+  - `physics_handle_valid=true`
+  - 原始 DOF `16`
+  - 有效控制 DOF `14`
+  - 碰撞 prim `20`
+  - mesh prim `58`
+  - 三路相机运行时非空
+  - HKVL-36A 运行时 12 维力/力矩为有限值
+  - 左右夹爪逻辑轴均能驱动对应两个 raw finger joint
 - 最新导入报告：`outputs/micromani_import_validation_report_20260703.json`。
 - 最新插件按钮报告：`outputs/micromani_plugin_button_report_20260703.json`。
 - 最新本地备份：`backups/cloud-isaacsim-20260703-034013`。
 - Isaac Sim extension 加载验证：云端 Isaac Sim 5.1 headless 环境中已成功启用并关闭 `micromani.data_collector-0.1.0`。
 - Isaac Sim extension UI 验证：云端 headless 环境中直接构建插件窗口，`visible=True`，状态为 `Ready.`。
 - PICO 网关按钮验证：云端 headless 环境中通过插件方法启动 PICO gateway，进程 `running=True`；停止后 `stopped=True`。
-- 本地 LeRobot 重载验证：`LeRobotDataset(..., return_uint8=True)` 可加载 8 帧数据，三路图像 shape 均为 `3x480x640`，力/力矩 shape 为 `12`。
+- 本地 LeRobot 重载验证：`LeRobotDataset(..., return_uint8=True)` 可加载 6 帧当前主场景数据，三路图像 shape 均为 `3x480x640`，力/力矩 shape 为 `12`。
 - PICO-4 网关：本地模拟 UDP 输入已验证能转发 14 维 `axes`；插件按钮已验证可启动/停止网关；PICO-4 实机输入尚未验证。
 - 详细复测报告：`docs/FUNCTIONAL_TEST_REPORT_20260703.md`。
 

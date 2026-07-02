@@ -30,12 +30,15 @@
 ## 最新验证证据
 
 - 本地项目验收：`scripts/run_local_checks.sh` 通过。
+- 当前主场景构建验收：`outputs/micromani_build_validation_20260703.json`，`build_success=true`，所有硬性 checks 为 true。
+- 当前主场景实际运行证据：`physics_handle_valid=true`，原始 DOF `16`，有效控制 DOF `14`，碰撞 prim `20`，mesh prim `58`，三路相机均渲染非空图像，HKVL-36A 运行时输出 12 维有限值。
+- 当前主场景夹爪验证：`left_gripper` 120 个物理步后最大误差约 `3.20e-05 m`，`right_gripper` 约 `1.87e-05 m`，证明逻辑夹爪轴能驱动两个 raw finger joint。
 - PICO 网关本地模拟：UDP 输入转发为 `axes_len=14`，网关状态 `packets_received=1`、`packets_forwarded=1`。
 - 云端插件按钮报告：`ui_visible=True`、场景打开 `ok=True`、相机/HKVL-36 配置按钮成功、PICO 网关启动/停止成功。
 - 从 URDF 重新导入的场景：原始 DOF `16`，有效控制 DOF `14`，碰撞 prim `20`，mimic prim `2`。
-- 端到端数据链路 session：`micromani_import_validation_20260703_02`。
-- LeRobot 数据集：8 帧，30 FPS，`observation.state=14D`，`action=14D`，`observation.force_torque=12D`，三路图像均为 `3x480x640`。
-- 回放到 Isaac 控制桥：发送 8 帧，收到 8 个 ACK，无错误。
+- 当前主场景端到端数据链路 session：`micromani_build_verify_20260703_01`。
+- LeRobot 数据集：6 帧，30 FPS，`observation.state=14D`，`action=14D`，`observation.force_torque=12D`，三路图像均为 `3x480x640`。
+- 回放到 Isaac 控制桥：发送 6 帧，收到 6 个 ACK，无错误。
 - 详细证据文档：`docs/FUNCTIONAL_TEST_REPORT_20260703.md`。
 
 ## 维度评分

@@ -4,7 +4,9 @@
 
 ## 结论
 
-本轮从“重新导入虚拟机器人”开始，完成了分步测试和联合链路测试。当前软件工程侧达到可交付状态：URDF 可导入、碰撞体和自由度检查通过、14 维有效控制成立、三路相机与双腕 HKVL-36A 力/力矩传感器可配置并采集、插件按钮路径可执行、PICO 网关可转发 14 维控制、LeRobot v3 数据集和力觉 sidecar 均能落盘，回放到 Isaac 控制桥收到完整 ACK。
+本轮从“重新导入虚拟机器人”开始，完成了分步测试和联合链路测试。随后又对当前主场景 `/isaac-sim/.local/share/ov/data/micromani/micromanipulator_scene.usd` 做了一次实际构建验收：Isaac Sim 打开主 USD、初始化 articulation 物理句柄、渲染三路相机、读取左右腕 HKVL-36A 力/力矩、执行夹爪逻辑轴到 raw finger joint 的运行验证，并输出 `build_success=true`。
+
+当前软件工程侧达到可交付状态：URDF 可导入、碰撞体和自由度检查通过、14 维有效控制成立、三路相机与双腕 HKVL-36A 力/力矩传感器可配置并采集、插件按钮路径可执行、PICO 网关可转发 14 维控制、LeRobot v3 数据集和力觉 sidecar 均能落盘，回放到 Isaac 控制桥收到完整 ACK。
 
 本轮发现并修复了一个关键导入可移植性问题：URDF 中的 `package://micromanipulator_isaac/...` 在云端临时资产目录名不是 `micromanipulator_isaac` 时无法解析 mesh，导致首次导入只有地面碰撞体。已在 `isaacsim_tools/import_micromanipulator.py` 中自动解析 URDF package 名，并为临时导入目录生成 `ROS_PACKAGE_PATH` alias。
 
@@ -17,6 +19,8 @@
 - 最新本地备份目录：由 `isaacsim_tools/backup_cloud_instance.sh` 生成到 `backups/cloud-isaacsim-*`
 - 复测场景：`/isaac-sim/.local/share/ov/data/micromani/import_validation_20260703_02/micromanipulator_scene.usd`
 - 复测数据 session：`micromani_import_validation_20260703_02`
+- 主场景构建验收报告：`outputs/micromani_build_validation_20260703.json`
+- 主场景数据闭环 session：`micromani_build_verify_20260703_01`
 
 ## 分步测试结果
 
@@ -32,6 +36,39 @@
 | 8 | 采集原始仿真操作数据 | 通过 | `datasets/raw/micromani_import_validation_20260703_02` |
 | 9 | 转换 LeRobot v3 数据集 | 通过 | `datasets/lerobot/micromani_import_validation_20260703_02` |
 | 10 | 回放到 Isaac 控制桥 | 通过 | 发送 8 帧，收到 8 个 ACK，错误为空 |
+| 11 | 当前主 USD 构建验收 | 通过 | `build_success=true`，所有硬性 checks 为 true |
+| 12 | 当前主 USD 新采集数据闭环 | 通过 | 6 帧采集、LeRobot 转换、6/6 ACK 回放 |
+
+## 当前主场景构建验收
+
+新增可复用验收脚本：
+
+```bash
+/isaac-sim/python.sh /isaac-sim/.local/share/ov/data/micromani/isaacsim_tools/validate_micromani_build.py \
+  --stage /isaac-sim/.local/share/ov/data/micromani/micromanipulator_scene.usd \
+  --report /isaac-sim/.local/share/ov/data/micromani/micromani_build_validation_20260703.json
+```
+
+本轮报告：`outputs/micromani_build_validation_20260703.json`。
+
+关键结果：
+
+- `build_success=true`
+- Articulation 物理句柄有效：`true`
+- 原始 DOF：`16`
+- 有效控制 DOF：`14`
+- 缺失 raw DOF：`[]`
+- 关节 prim：`19`
+- 碰撞 prim：`20`
+- mesh prim：`58`
+- mimic prim：`2`
+- 三路相机均存在，运行时均渲染出非空 `480x640x3` 图像
+- 左右 HKVL-36A sensor prim 均存在，运行时读取 12 维有限值
+- 夹爪逻辑轴验证通过：
+  - `left_gripper` 120 个物理步后最大误差约 `3.20e-05 m`
+  - `right_gripper` 120 个物理步后最大误差约 `1.87e-05 m`
+
+需要说明：第一次验收脚本只等待 5 个物理步就检查夹爪，产生了 0.65-0.86 mm 的短暂误差，因此判定失败。随后单独做了夹爪收敛探针，确认指令在发送当帧精确写入，120 个物理步后误差降低到 `1e-4 m` 内。脚本已修正为等待夹爪物理收敛后再判定。
 
 ## 机器人导入检查
 
@@ -128,6 +165,22 @@ datasets/lerobot/micromani_import_validation_20260703_02
 - 连接方式：本地通过隧道访问云端 Isaac TCP 控制桥
 
 结论：LeRobot 数据中保存的 14 维 action 可被控制桥接受并回放，数据采集和控制回放闭环成立。
+
+## 当前主场景数据闭环复核
+
+在当前主 USD 上额外采集并回放：
+
+- 原始数据：`datasets/raw/micromani_build_verify_20260703_01`
+- LeRobot 数据集：`datasets/lerobot/micromani_build_verify_20260703_01`
+- 帧数：`6`
+- FPS：`30`
+- `observation.state`: `14`
+- `action`: `14`
+- `observation.force_torque`: `12`
+- 三路相机 shape：均为 `3x480x640`
+- 力/力矩 sidecar：JSONL、CSV、metadata 均存在
+- 力/力矩饱和计数：左右均为 `0`
+- 回放报告：发送 `6` 帧，收到 `6` 个 ACK，错误 `[]`
 
 ## PICO 通讯测试
 

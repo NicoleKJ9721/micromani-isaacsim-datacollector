@@ -1,6 +1,6 @@
 # Isaac Sim 云端开发进度
 
-更新时间：2026-07-03 03:40:27 CST
+更新时间：2026-07-03 03:48:28 CST
 
 ## 当前目标
 
@@ -30,7 +30,7 @@
 
 ## 备份位置
 
-本次云端备份目录：`/Users/nikejian/Projects/MicroManiURDF/backups/cloud-isaacsim-20260703-034013`
+本次云端备份目录：`/Users/nikejian/Projects/MicroManiURDF/backups/cloud-isaacsim-20260703-034816`
 
 ## 导入检查结果
 
@@ -81,27 +81,27 @@
 
 - UDP 端口：`49010`
 - TCP 端口：`49011`
-- 已接收控制包：`44`
-- 最近来源：`tcp:127.0.0.1:43250`
+- 已接收控制包：`50`
+- 最近来源：`tcp:127.0.0.1:35092`
 - 最近错误：`None`
 
 ## LeRobot 数据采集闭环
 
 - 已参照 LeRobot 的记录流程完成虚拟微纳机器人数据采集链路：读取观测、生成动作、发送动作、保存观测/动作帧、转换成 LeRobot v3 数据集、再回放到 Isaac Sim。
 - 当前数据结构包含视觉、14 维状态、14 维动作和 12 维左右腕 HKVL-36 力/力矩。
-- 最终联合测试 session：`micromani_import_validation_20260703_02`。
-- 原始数据：`/Users/nikejian/Projects/MicroManiURDF/datasets/raw/micromani_import_validation_20260703_02`。
-- LeRobot 数据集：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02`。
+- 最终联合测试 session：`micromani_build_verify_20260703_01`。
+- 原始数据：`/Users/nikejian/Projects/MicroManiURDF/datasets/raw/micromani_build_verify_20260703_01`。
+- LeRobot 数据集：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_build_verify_20260703_01`。
 - 验证结果：
-  - 采集帧数：`8`
+  - 采集帧数：`6`
   - FPS：`30`
   - `observation.state`：`14` 维
   - `action`：`14` 维
   - `observation.force_torque`：`12` 维
   - 三路相机重载后均为 `3x480x640`
-  - 力/力矩 sidecar：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02/force_torque/episode_000000.jsonl`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02/force_torque/episode_000000.csv`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_import_validation_20260703_02/force_torque/metadata.json`
+  - 力/力矩 sidecar：`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_build_verify_20260703_01/force_torque/episode_000000.jsonl`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_build_verify_20260703_01/force_torque/episode_000000.csv`、`/Users/nikejian/Projects/MicroManiURDF/datasets/lerobot/micromani_build_verify_20260703_01/force_torque/metadata.json`
   - 左右 HKVL-36A 传感器饱和计数：`left=0, right=0`
-  - 回放到 Isaac TCP 控制桥：发送 `8` 帧，收到 `8` 个 ACK，错误 `[]`
+  - 回放到 Isaac TCP 控制桥：发送 `6` 帧，收到 `6` 个 ACK，错误 `[]`
 
 ### 当前限制
 
@@ -118,4 +118,21 @@
 - 菜单入口：`Tools > MicroMani > MicroMani Data Collector`。
 - 常用按钮：打开场景、保存场景、配置相机、配置 HKVL-36、启动/停止控制桥、启动/停止 PICO 网关、运行端到端烟测、打开数据目录、打开文档。
 - 验证状态：云端 Isaac Sim 5.1 headless 环境中成功启用/关闭 `micromani.data_collector-0.1.0`，UI 构建通过，PICO 网关按钮启动/停止通过。
+
+## 当前主场景构建验收
+
+- 验收报告：`outputs/micromani_build_validation_20260703.json`
+- `build_success`：`True`
+- 硬性检查全部通过：`True`
+- Articulation 物理句柄：`True`
+- 原始 DOF：`16`
+- 有效控制 DOF：`14`
+- 碰撞 prim：`20`
+- mesh prim：`58`
+- HKVL-36 运行时力/力矩维度：`12`，有限值：`True`，饱和：`False`
+- `left_gripper` 夹爪运行误差：`3.1954057514667344e-05` m，收敛步数 `120`
+- `right_gripper` 夹爪运行误差：`1.867323368787751e-05` m，收敛步数 `120`
+- `left_wrist` 相机：shape `[480, 640, 3]`，非空 `True`，mean `38.24347764756944`
+- `right_wrist` 相机：shape `[480, 640, 3]`，非空 `True`，mean `37.609288194444446`
+- `global` 相机：shape `[480, 640, 3]`，非空 `True`，mean `130.44371419270834`
 

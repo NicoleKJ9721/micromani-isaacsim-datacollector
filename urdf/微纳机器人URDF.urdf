@@ -1,0 +1,1081 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="微纳机器人URDF">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0 0 0.005"
+        rpy="0 0 0" />
+      <mass
+        value="0.5796" />
+      <inertia
+        ixx="0.0025599"
+        ixy="1.3282812350024E-19"
+        ixz="-1.29878385245659E-20"
+        iyy="0.0030720732"
+        iyz="3.56303166947532E-21"
+        izz="0.0056223132" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="link0_left">
+    <inertial>
+      <origin
+        xyz="-0.0065426166540612 -0.0057606070592863 0.0809900557444886"
+        rpy="0 0 0" />
+      <mass
+        value="1.52676954593702" />
+      <inertia
+        ixx="0.00386572407030329"
+        ixy="-2.41864327827532E-05"
+        ixz="2.19568880097128E-05"
+        iyy="0.00256785051906343"
+        iyz="1.70560363911002E-07"
+        izz="0.0062272027483853" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link0_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link0_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint0_left"
+    type="fixed">
+    <origin
+      xyz="-0.201 -0.00041085 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link0_left" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="link1_left">
+    <inertial>
+      <origin
+        xyz="0.000643014787197194 -0.0295410512472696 0.014578375869627"
+        rpy="0 0 0" />
+      <mass
+        value="0.279182190372887" />
+      <inertia
+        ixx="0.000620012187734269"
+        ixy="1.9438808908521E-05"
+        ixz="-9.99946746421324E-07"
+        iyy="8.71135751615179E-05"
+        iyz="1.86802678333749E-05"
+        izz="0.000682107196400139" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link1_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link1_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint1_left"
+    type="prismatic">
+    <origin
+      xyz="-0.04285 -0.012089 0.1675"
+      rpy="0 0 0" />
+    <parent
+      link="link0_left" />
+    <child
+      link="link1_left" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0.075"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link2_left">
+    <inertial>
+      <origin
+        xyz="0.0315869294646213 -0.000622319866543444 0.0719210154416289"
+        rpy="0 0 0" />
+      <mass
+        value="0.395835843270563" />
+      <inertia
+        ixx="0.00117530971456081"
+        ixy="7.10901335683027E-07"
+        ixz="-7.00768565673198E-05"
+        iyy="0.00114669280375895"
+        iyz="2.24565490386412E-05"
+        izz="0.000173450121583067" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link2_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link2_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint2_left"
+    type="prismatic">
+    <origin
+      xyz="0.0040718 -0.02785 0.041"
+      rpy="0 0 0" />
+    <parent
+      link="link1_left" />
+    <child
+      link="link2_left" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0.05"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link3_left">
+    <inertial>
+      <origin
+        xyz="0.0152577806340449 0.0142246146697489 -0.00955600723225536"
+        rpy="0 0 0" />
+      <mass
+        value="0.222624001462815" />
+      <inertia
+        ixx="0.000228063175885594"
+        ixy="-8.59895243333468E-07"
+        ixz="1.3076719128905E-06"
+        iyy="9.64106002817906E-05"
+        iyz="-1.66650661607747E-05"
+        izz="0.000149826262454216" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link3_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link3_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint3_left"
+    type="prismatic">
+    <origin
+      xyz="0.066928 0 0.09685"
+      rpy="0 0 0" />
+    <parent
+      link="link2_left" />
+    <child
+      link="link3_left" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="0.075"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link4_left">
+    <inertial>
+      <origin
+        xyz="0.0111243539782047 0.0458721839458874 0.00486640297107177"
+        rpy="0 0 0" />
+      <mass
+        value="0.0804644378420173" />
+      <inertia
+        ixx="0.000187408331403788"
+        ixy="2.50797659908348E-06"
+        ixz="1.12743384852996E-06"
+        iyy="1.83505654828095E-05"
+        iyz="-2.56933653976438E-05"
+        izz="0.000174853729593606" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link4_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link4_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint4_left"
+    type="revolute">
+    <origin
+      xyz="0.043 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="link3_left" />
+    <child
+      link="link4_left" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link5_left">
+    <inertial>
+      <origin
+        xyz="0.0258196436169424 0.00575634677736611 -0.0177472430867189"
+        rpy="0 0 0" />
+      <mass
+        value="0.165691393473282" />
+      <inertia
+        ixx="0.000108334111329763"
+        ixy="-6.20848127304624E-06"
+        ixz="1.76579889332517E-05"
+        iyy="0.000131934307794273"
+        iyz="3.75536826087539E-06"
+        izz="5.25202701495081E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link5_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link5_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint5_left"
+    type="revolute">
+    <origin
+      xyz="0.0260000000000005 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="link4_left" />
+    <child
+      link="link5_left" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.1396"
+      upper="0.1396"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link6_left">
+    <inertial>
+      <origin
+        xyz="-0.000926886977939079 -0.0612166587755755 0.0403217707413523"
+        rpy="0 0 0" />
+      <mass
+        value="0.129565193626411" />
+      <inertia
+        ixx="2.32665157632315E-05"
+        ixy="5.98311178945308E-08"
+        ixz="-2.26801552685482E-07"
+        iyy="3.3214758675839E-05"
+        iyz="4.55104657320523E-09"
+        izz="3.49311384061949E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link6_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link6_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint6_left"
+    type="revolute">
+    <origin
+      xyz="0.043 -0.015 0"
+      rpy="0 0 0" />
+    <parent
+      link="link5_left" />
+    <child
+      link="link6_left" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link_finger1_left">
+    <inertial>
+      <origin
+        xyz="-0.0309025383576725 0.00315133281689049 0.00778534170107914"
+        rpy="0 0 0" />
+      <mass
+        value="0.00175229015754922" />
+      <inertia
+        ixx="7.17509647336E-08"
+        ixy="-1.05822613025935E-09"
+        ixz="4.47822213818567E-09"
+        iyy="3.9685047688177E-08"
+        iyz="-7.88993458889334E-10"
+        izz="8.24617249839803E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger1_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger1_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_finger1_left"
+    type="prismatic">
+    <origin
+      xyz="0.0637 -0.067978 0.043978"
+      rpy="0 0 0" />
+    <parent
+      link="link6_left" />
+    <child
+      link="link_finger1_left" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="0"
+      upper="0.01"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link_finger2_left">
+    <inertial>
+      <origin
+        xyz="-0.0309025383576612 -0.00315133281688702 -0.00778534170112399"
+        rpy="0 0 0" />
+      <mass
+        value="0.00175229015754921" />
+      <inertia
+        ixx="7.17509647336138E-08"
+        ixy="1.05822613025863E-09"
+        ixz="-4.47822213820152E-09"
+        iyy="3.96850476881768E-08"
+        iyz="-7.88993458887572E-10"
+        izz="8.2461724983967E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger2_left.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger2_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_finger2_left"
+    type="prismatic">
+    <origin
+      xyz="0.0637 -0.066635 0.043978"
+      rpy="0 0 0" />
+    <parent
+      link="link6_left" />
+    <child
+      link="link_finger2_left" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0.01"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link0_right">
+    <inertial>
+      <origin
+        xyz="0.00634313306648099 -0.00548212183076519 0.0809900557511156"
+        rpy="0 0 0" />
+      <mass
+        value="1.52676954608042" />
+      <inertia
+        ixx="0.00386572407032671"
+        ixy="-2.41864327818313E-05"
+        ixz="-2.3369491550649E-05"
+        iyy="0.00256785051906373"
+        iyz="-1.43602724870314E-06"
+        izz="0.00622720274840866" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link0_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link0_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint0_right"
+    type="fixed">
+    <origin
+      xyz="0.201 -0.00041085 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link0_right" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="link1_right">
+    <inertial>
+      <origin
+        xyz="0.000884797727918218 -0.0295134187748134 0.0145783758752608"
+        rpy="0 0 0" />
+      <mass
+        value="0.27918219052808" />
+      <inertia
+        ixx="0.000620012187734648"
+        ixy="1.94388089075546E-05"
+        ixz="-4.79564674501688E-07"
+        iyy="8.71135751870577E-05"
+        iyz="1.87217934586016E-05"
+        izz="0.000682107196425606" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link1_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link1_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint1_right"
+    type="prismatic">
+    <origin
+      xyz="0.04285 -0.012089 0.1675"
+      rpy="0 0 0" />
+    <parent
+      link="link0_right" />
+    <child
+      link="link1_right" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="0"
+      upper="0.075"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link2_right">
+    <inertial>
+      <origin
+        xyz="-0.0315674402752447 0.000451790880444461 0.0719210152611578"
+        rpy="0 0 0" />
+      <mass
+        value="0.395835842694831" />
+      <inertia
+        ixx="0.00117530971446919"
+        ixy="7.10901334341072E-07"
+        ixz="7.01183821925348E-05"
+        iyy="0.00114669280375778"
+        iyz="-2.29769311135845E-05"
+        izz="0.00017345012149124" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link2_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link2_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint2_right"
+    type="prismatic">
+    <origin
+      xyz="-0.0040718 -0.02785 0.041"
+      rpy="0 0 0" />
+    <parent
+      link="link1_right" />
+    <child
+      link="link2_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0.05"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link3_right">
+    <inertial>
+      <origin
+        xyz="-0.0152577806340514 0.0142592673093293 0.00985921574920501"
+        rpy="0 0 0" />
+      <mass
+        value="0.222624001462815" />
+      <inertia
+        ixx="0.000228063175885592"
+        ixy="8.18369618216305E-07"
+        ixz="7.87289842540941E-07"
+        iyy="9.64106002817957E-05"
+        iyz="1.66650661607825E-05"
+        izz="0.000149826262454212" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link3_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link3_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint3_right"
+    type="prismatic">
+    <origin
+      xyz="-0.066928 0 0.09685"
+      rpy="0 0 0" />
+    <parent
+      link="link2_right" />
+    <child
+      link="link3_right" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="0.075"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link4_right">
+    <inertial>
+      <origin
+        xyz="-0.0111243539516557 0.0458721839331023 -0.0048664030111617"
+        rpy="0 0 0" />
+      <mass
+        value="0.0804644378077135" />
+      <inertia
+        ixx="0.0001874083315449"
+        ixy="-2.50797664143235E-06"
+        ixz="1.12743388965847E-06"
+        iyy="1.83505656350846E-05"
+        iyz="2.56933654610371E-05"
+        izz="0.000174853729577868" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link4_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link4_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint4_right"
+    type="revolute">
+    <origin
+      xyz="-0.043 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="link3_right" />
+    <child
+      link="link4_right" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link5_right">
+    <inertial>
+      <origin
+        xyz="-0.0258196436169456 0.00575634677671141 0.0177472430869243"
+        rpy="0 0 0" />
+      <mass
+        value="0.165691393473282" />
+      <inertia
+        ixx="0.000108334111329841"
+        ixy="6.2084812722158E-06"
+        ixz="1.7657988933488E-05"
+        iyy="0.000131934307794581"
+        iyz="-3.75536825801867E-06"
+        izz="5.25202701492719E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link5_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link5_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint5_right"
+    type="revolute">
+    <origin
+      xyz="-0.026 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="link4_right" />
+    <child
+      link="link5_right" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-0.1396"
+      upper="0.1396"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link6_right">
+    <inertial>
+      <origin
+        xyz="0.000926231859224746 -0.0609841553795557 0.0403217707391451"
+        rpy="0 0 0" />
+      <mass
+        value="0.129565193626412" />
+      <inertia
+        ixx="2.32665157632308E-05"
+        ixy="5.98311178840659E-08"
+        ixz="2.27635062410349E-07"
+        iyy="3.32147586758387E-05"
+        iyz="4.56564167394636E-09"
+        izz="3.4931138406196E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link6_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link6_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint6_right"
+    type="revolute">
+    <origin
+      xyz="-0.043 -0.015 0"
+      rpy="0 0 0" />
+    <parent
+      link="link5_right" />
+    <child
+      link="link6_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-3.1416"
+      upper="3.1416"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link_finger1_right">
+    <inertial>
+      <origin
+        xyz="0.0309025383576615 -0.00315133281716586 0.00778534170101186"
+        rpy="0 0 0" />
+      <mass
+        value="0.00175229015754919" />
+      <inertia
+        ixx="7.17509647336135E-08"
+        ixy="-1.05822613009383E-09"
+        ixz="-4.47822213823986E-09"
+        iyy="3.96850476881195E-08"
+        iyz="7.88993457347286E-10"
+        izz="8.24617249840231E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger1_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger1_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_finger1_right"
+    type="prismatic">
+    <origin
+      xyz="-0.0637 -0.066635 0.043978"
+      rpy="0 0 0" />
+    <parent
+      link="link6_right" />
+    <child
+      link="link_finger1_right" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0.01"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link_finger2_right">
+    <inertial>
+      <origin
+        xyz="0.030902538357672 0.00315133281717214 -0.00778534170096434"
+        rpy="0 0 0" />
+      <mass
+        value="0.00175229015754927" />
+      <inertia
+        ixx="7.17509647336019E-08"
+        ixy="1.05822613010146E-09"
+        ixz="4.4782221382239E-09"
+        iyy="3.96850476881222E-08"
+        iyz="7.88993457350383E-10"
+        izz="8.24617249840396E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger2_right.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://微纳机器人URDF/meshes/link_finger2_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_finger2_right"
+    type="prismatic">
+    <origin
+      xyz="-0.0637 -0.067978 0.043978"
+      rpy="0 0 0" />
+    <parent
+      link="link6_right" />
+    <child
+      link="link_finger2_right" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="0"
+      upper="0.01"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

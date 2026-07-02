@@ -1,0 +1,18 @@
+[package]
+version = "0.1.0"
+category = "Simulation"
+title = "MicroMani Data Collector"
+description = "Isaac Sim controls for the MicroMani bimanual micromanipulator scene, HKVL-36 force/torque setup, control bridge, and LeRobot data collection."
+authors = ["NikeJian", "OpenAI Codex"]
+repository = ""
+keywords = ["isaac", "micromanipulator", "lerobot", "force-torque", "urdf"]
+readme = "docs/README.md"
+writeTarget.kit = true
+
+[dependencies]
+"isaacsim.core.api" = {}
+"isaacsim.gui.components" = {}
+"omni.kit.uiapp" = {}
+
+[[python.module]]
+name = "micromani.data_collector"

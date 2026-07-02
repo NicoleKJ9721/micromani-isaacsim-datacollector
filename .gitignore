@@ -1,0 +1,21 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*.log
+
+# Generated simulation/data artifacts
+backups/
+datasets/
+outputs/
+
+# Local credentials and machine-specific files
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# Large/generated web export remnants
+renderer-*.js
+export.log

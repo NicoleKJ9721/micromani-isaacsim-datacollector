@@ -1,0 +1,1 @@
+controller_joint_names: ['', 'joint1_left', 'joint2_left', 'joint3_left', 'joint4_left', 'joint5_left', 'joint6_left', 'joint_finger1_left', 'joint_finger2_left', 'joint1_right', 'joint2_right', 'joint3_right', 'joint4_right', 'joint5_right', 'joint6_right', 'joint_finger1_right', 'joint_finger2_right', ]

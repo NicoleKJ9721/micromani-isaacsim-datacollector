@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import Iterable, Mapping
 
 
@@ -66,21 +67,10 @@ JOINT_LIMITS = {
     "right_gripper": (0.0, 0.01),
 }
 
+# Retracted, staggered start: CAD cross-arm finger AABBs are >=17 mm apart.
 DEFAULT_HOME_ACTION = (
-    0.034,
-    0.023,
-    0.034,
-    0.0,
-    0.0,
-    0.0,
-    0.004,
-    0.034,
-    0.023,
-    0.034,
-    0.0,
-    0.0,
-    0.0,
-    0.004,
+    0.002, 0.005, 0.034, 0.0, 0.0, 0.0, 0.00225,
+    0.002, 0.045, 0.034, 0.0, 0.0, 0.0, 0.001,
 )
 
 CAMERA_SPECS = {
@@ -89,21 +79,21 @@ CAMERA_SPECS = {
         "feature_key": "observation.images.left_wrist",
         "resolution": (640, 480),
         "fps": 30,
-        "target_fov_m": (0.04, 0.04),
+        "target_fov_m": (0.04, 0.03),
     },
     "right_wrist": {
         "prim_path": "/micromanipulator/link6_right/right_wrist_camera",
         "feature_key": "observation.images.right_wrist",
         "resolution": (640, 480),
         "fps": 30,
-        "target_fov_m": (0.04, 0.04),
+        "target_fov_m": (0.04, 0.03),
     },
     "global": {
         "prim_path": "/World/global_camera",
         "feature_key": "observation.images.global",
         "resolution": (640, 480),
         "fps": 30,
-        "target_fov_m": (0.15, 0.15),
+        "target_fov_m": (0.12, 0.09),
     },
 }
 
@@ -139,9 +129,11 @@ HKVL36_COMMON = {
     "repeatability_percent_fs": 0.1,
     "resolution_percent_fs": 0.03,
     "accuracy_percent_fs": 0.5,
-    "mass_kg": 0.11,
+    "mass_kg_upper_bound": 0.2,
+    "spec_source": "https://www.hkvtech.cn/archives/125/",
+    "spec_checked_date": "2026-11-09",
     "sample_frequency_hz_range": (150, 1000),
-    "supply_voltage_vdc_range": (12, 48),
+    "supply_voltage_vdc_range": (24, 24),
     "communication_interfaces": ("RS485", "CAN-FD", "EtherCAT"),
 }
 
@@ -218,8 +210,8 @@ def hkvl36_axis_ranges(model: str = HKVL36_DEFAULT_MODEL) -> list[float]:
 
 def quantize_hkvl36_wrench(wrench: Iterable[float], model: str = HKVL36_DEFAULT_MODEL) -> tuple[list[float], bool]:
     values = [float(v) for v in wrench]
-    if len(values) != len(FORCE_TORQUE_AXES):
-        raise ValueError(f"expected {len(FORCE_TORQUE_AXES)} wrench values, got {len(values)}")
+    if len(values) != len(FORCE_TORQUE_AXES) or not all(map(math.isfinite, values)):
+        raise ValueError(f"expected {len(FORCE_TORQUE_AXES)} finite wrench values")
     spec = hkvl36_model_spec(model)
     ranges = hkvl36_axis_ranges(model)
     resolution_scale = float(spec["resolution_percent_fs"]) / 100.0

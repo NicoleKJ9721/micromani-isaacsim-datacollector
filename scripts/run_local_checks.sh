@@ -3,8 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
+PYTHON="${LEROBOT_PYTHON:-$ROOT_DIR/.venv-lerobot/bin/python}"
+if [[ ! -x "$PYTHON" ]]; then PYTHON=python3; fi
 
-python3 -m py_compile \
+"$PYTHON" -m py_compile \
   isaacsim_tools/micromani_lerobot_schema.py \
   isaacsim_tools/micromani_collect_isaac.py \
   isaacsim_tools/micromani_configure_cameras.py \
@@ -22,6 +24,6 @@ bash -n \
   isaacsim_tools/backup_cloud_instance.sh \
   scripts/install_isaac_extension.sh
 
-python3 scripts/validate_project_delivery.py
+"$PYTHON" scripts/validate_project_delivery.py
 
 echo "Local checks passed."

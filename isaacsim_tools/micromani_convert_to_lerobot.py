@@ -143,6 +143,12 @@ def convert() -> dict:
     args = parse_args()
     raw_session = Path(args.raw_session).expanduser().resolve()
     output_root = Path(args.output_root).expanduser().resolve()
+    if (raw_session / "session.json").exists():
+        from micromani_export_session import export_session
+        report = export_session(raw_session, output_root, args.repo_id,
+                                image_dtype=args.image_dtype, overwrite=args.overwrite)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return report
     manifest = json.loads((raw_session / "manifest.json").read_text(encoding="utf-8"))
     episode_dir = raw_session / manifest["episode_dir"]
     rows = load_jsonl(episode_dir / "frames.jsonl")

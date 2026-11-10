@@ -14,7 +14,6 @@ import sys
 import time
 from pathlib import Path
 
-from isaacsim import SimulationApp
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
@@ -148,15 +147,21 @@ def get_control_state(robot, dof_names: list[str]) -> list[float]:
 def read_force_torque(robot, dof_index: dict[str, int], model: str) -> tuple[dict, list[float]]:
     import numpy as np
 
+    # 固定关节也占 joint 索引，DOF 顺序不能用作关节反力行索引。
+    view = getattr(robot, "_articulation_view", robot)
+    metadata = getattr(view, "_metadata", None)
+    if metadata is None:
+        raise RuntimeError("articulation joint metadata is unavailable")
+    joint_index = metadata.joint_indices
     joint_rows = []
     sensor_names = []
     missing = []
     for sensor_name, spec in FORCE_TORQUE_SENSORS.items():
         joint_name = spec["joint_name"]
-        if joint_name not in dof_index:
+        if joint_name not in joint_index:
             missing.append(joint_name)
             continue
-        joint_rows.append(dof_index[joint_name] + 1)
+        joint_rows.append(joint_index[joint_name] + 1)
         sensor_names.append(sensor_name)
     if missing:
         raise RuntimeError(f"missing force-torque sensor joints in articulation: {missing}")
@@ -175,7 +180,7 @@ def read_force_torque(robot, dof_index: dict[str, int], model: str) -> tuple[dic
         readings[sensor_name] = {
             "model": model,
             "joint_name": spec["joint_name"],
-            "joint_row_index": int(dof_index[spec["joint_name"]] + 1),
+            "joint_row_index": int(joint_index[spec["joint_name"]] + 1),
             "frame": spec["frame"],
             "axes": list(FORCE_TORQUE_AXES),
             "wrench": wrench,
@@ -201,6 +206,8 @@ def apply_control_action(robot, dof_index: dict[str, int], action: list[float]) 
     if missing:
         raise RuntimeError(f"missing DOFs in articulation: {missing}")
     robot.set_joint_positions(np.asarray(joint_positions, dtype=np.float32), joint_indices=np.asarray(joint_indices))
+    robot.set_joint_position_targets(np.asarray([joint_positions], dtype=np.float32), joint_indices=np.asarray(joint_indices))
+    robot.set_joint_velocities(np.zeros((1,len(joint_indices)), dtype=np.float32), joint_indices=np.asarray(joint_indices))
 
 
 def write_png(path: Path, rgb) -> None:
@@ -272,6 +279,8 @@ def finalize_force_torque_stats(stats: dict) -> dict:
 
 
 def main() -> None:
+    from isaacsim import SimulationApp
+
     args = parse_args()
     kit = SimulationApp({"headless": True, "renderer": "RaytracedLighting"})
 
@@ -317,6 +326,7 @@ def main() -> None:
             resolution=(width, height),
         )
         camera.initialize()
+        camera.add_rgb_to_frame()
         cameras[camera_name] = camera
 
     home = list(DEFAULT_HOME_ACTION)

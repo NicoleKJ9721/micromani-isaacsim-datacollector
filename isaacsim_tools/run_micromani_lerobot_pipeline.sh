@@ -79,6 +79,7 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no -o BatchMode=yes -M -S "$SSH_CTL" 
   -fN -L "$LOCAL_BRIDGE_PORT:127.0.0.1:49011" "$REMOTE_USER@$REMOTE_HOST"
 trap 'ssh -S "$SSH_CTL" -O exit "$REMOTE_USER@$REMOTE_HOST" 2>/dev/null || true' EXIT
 "$LEROBOT_PYTHON" "$ROOT_DIR/isaacsim_tools/micromani_replay_lerobot.py" \
+  --allow-legacy-model-si \
   --dataset-root "$LOCAL_LEROBOT_DIR" \
   --repo-id "$REPO_ID" \
   --host "127.0.0.1" \

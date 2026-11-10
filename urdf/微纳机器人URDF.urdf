@@ -26,21 +26,18 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://微纳机器人URDF/meshes/base_link.STL" />
+          filename="package://微纳机器人URDF/meshes/base_breadboard.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.52 0.55 0.58 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0.005" rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://微纳机器人URDF/meshes/base_link.STL" />
+        <box size="1.2 0.8 0.01" />
       </geometry>
     </collision>
   </link>
@@ -88,7 +85,7 @@
     name="joint0_left"
     type="fixed">
     <origin
-      xyz="-0.201 -0.00041085 0"
+      xyz="-0.231 -0.00041085 0"
       rpy="0 0 0" />
     <parent
       link="base_link" />
@@ -605,7 +602,7 @@
     name="joint0_right"
     type="fixed">
     <origin
-      xyz="0.201 -0.00041085 0"
+      xyz="0.231 -0.00041085 0"
       rpy="0 0 0" />
     <parent
       link="base_link" />

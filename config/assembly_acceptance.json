@@ -1,0 +1,38 @@
+{
+  "status": "Acceptance criteria declared before the first autonomous grasp or assembly",
+  "policy_boundary": "Astra uses movement and sensor APIs plus nominal robot, fixture and part design calibration. No live task-object truth or privileged physics QA inputs.",
+  "required_sequence": [
+    "Left fingers grasp the notched half of the brass cavity",
+    "Right fingers grasp the short circular boss of the aluminum sleeve",
+    "Coarse alignment followed by fine alignment using sensor feedback",
+    "Partial insertion while the cavity is still held",
+    "Left fingers release and retract, close, then push the cavity farther",
+    "Only the notched section remains exposed outside the sleeve"
+  ],
+  "prohibited_shortcuts": [
+    "Teleporting bodies or robot joints during execution",
+    "Fixed joints, welded grasps, attachment helpers or hidden object following",
+    "Using fixture grasp tests as proof of autonomous assembly",
+    "Using a reached command status alone as proof of task success"
+  ],
+  "monitoring": {
+    "check_after_each_bounded_motion": true,
+    "record_camera_joint_wrench_grip_observations": true,
+    "stop_on_stale_feedback_or_unexpected_contact": true
+  },
+  "stability_gate": {
+    "consecutive_full_sequences": 3,
+    "different_initial_pairs_required": true,
+    "final_hold_sim_seconds": 2.0,
+    "no_dropped_part_or_divergent_contact": true,
+    "required_evidence": "Command audit and sensor images for every stage, plus independent geometry scoring after the controller has stopped. Privileged scoring is not returned to the operating policy."
+  },
+  "friction_qualification": {
+    "tpu_hardness": null,
+    "coefficients_are_estimates": true,
+    "check_scales": [0.5, 1.0, 1.5],
+    "report_failures_without_relabeling_them_as_success": true,
+    "claim_limit": "Simulation success cannot establish real TPU friction or hardware performance."
+  },
+  "achieved": false
+}

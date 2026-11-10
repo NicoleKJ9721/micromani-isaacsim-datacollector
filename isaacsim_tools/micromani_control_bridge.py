@@ -184,14 +184,8 @@ class MicroManiControlBridge:
         self._write_status()
 
     def _packet_to_command(self, packet):
-        targets = {}
-        if "axes" in packet:
-            axes = packet["axes"]
-            if len(axes) != len(CONTROL_ORDER):
-                raise ValueError(f"axes length must be {len(CONTROL_ORDER)}")
-            targets.update(dict(zip(CONTROL_ORDER, [float(v) for v in axes])))
-        if "joints" in packet:
-            targets.update({str(k): float(v) for k, v in packet["joints"].items()})
+        from micromani_api import validate_command
+        targets, _ = validate_command({k: packet[k] for k in ('axes', 'joints') if k in packet})
 
         expanded = {}
         for name, value in targets.items():

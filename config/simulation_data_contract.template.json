@@ -1,0 +1,7 @@
+{
+  "operator_left_model_side": null,
+  "gripper_zero_gap_mm": {"left": null, "right": null},
+  "gripper_open_sign": {"left": 1, "right": 1},
+  "motion_sign": {"left": [1, 1, 1, 1, 1, 1], "right": [1, 1, 1, 1, 1, 1]},
+  "motion_zero_si": {"left": [0, 0, 0, 0, 0, 0], "right": [0, 0, 0, 0, 0, 0]}
+}

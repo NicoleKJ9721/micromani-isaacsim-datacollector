@@ -19,3 +19,7 @@ id_ed25519*
 # Large/generated web export remnants
 renderer-*.js
 export.log
+
+# Local simulation runtime and isolated export environment
+runtime/
+.venv-lerobot/

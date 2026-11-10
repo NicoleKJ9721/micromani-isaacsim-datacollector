@@ -1,0 +1,13 @@
+{
+  "arm_outward_offset_m": 0.03,
+  "breadboard": {
+    "length_m": 1.2,
+    "width_m": 0.8,
+    "thickness_m": 0.01,
+    "pitch_m": 0.025,
+    "hole_diameter_m": 0.006,
+    "hole_depth_m": 0.004,
+    "edge_margin_m": 0.015,
+    "note": "User specified 1200 mm along X (arms), 800 mm along Y; original center and 10 mm thickness retained. Hole parameters are visual assumptions; no threads or isolation dynamics modeled."
+  }
+}

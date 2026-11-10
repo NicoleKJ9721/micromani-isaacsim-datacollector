@@ -36,6 +36,19 @@ CAMERA_POSES = {
 }
 
 
+def wrist_work_target(finger1_points, finger2_points, inward_x):
+    import numpy as np
+
+    centers = []
+    for points in (finger1_points, finger2_points):
+        distance_along_axis = inward_x * points[:, 0]
+        tip = points[distance_along_axis >= distance_along_axis.max() - .001]
+        centers.append((tip.min(axis=0) + tip.max(axis=0)) / 2)
+    target = (centers[0] + centers[1]) / 2
+    target[0] += inward_x * .001
+    return tuple(target)
+
+
 def vec_norm(v):
     length = math.sqrt(sum(x * x for x in v))
     if length == 0:

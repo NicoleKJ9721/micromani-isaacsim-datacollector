@@ -1,0 +1,59 @@
+{
+  "status": "Initial estimates; TPU hardness, print direction, roughness and measured friction are unknown",
+  "tpu_hardware_information": {
+    "material": "3D printed TPU, user confirmed",
+    "shore_hardness": null,
+    "surface_texture": null,
+    "user_response": "Unknown; do not assume Shore 95A or a textured surface",
+    "friction_calibration": "Not measured; simulation coefficients below are estimates"
+  },
+  "combine_mode": "multiply",
+  "materials": {
+    "gold_cavity": {
+      "static_friction": 0.6,
+      "dynamic_friction": 0.5,
+      "density_kg_m3": 8500
+    },
+    "sleeve": {
+      "static_friction": 0.65,
+      "dynamic_friction": 0.5,
+      "density_kg_m3": 2700
+    },
+    "tpu_fingers": {
+      "static_friction": 1.0,
+      "dynamic_friction": 0.8,
+      "contact_stiffness_n_m": 0,
+      "contact_damping_ns_m": 0
+    }
+  },
+  "effective_pairs": {
+    "TPU_brass": {
+      "static": 0.6,
+      "dynamic": 0.4
+    },
+    "TPU_aluminum": {
+      "static": 0.65,
+      "dynamic": 0.4
+    },
+    "brass_aluminum": {
+      "static": 0.39,
+      "dynamic": 0.25
+    }
+  },
+  "compliance_model": "Rigid contact baseline with TPU friction; compliant contact is optional and disabled until stable/calibrated",
+  "sensitivity_scales": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "unvalidated_compliance_candidate": {
+    "stiffness_n_m": 10000,
+    "damping_ns_m": 0.1,
+    "reason": "Uncalibrated; early fixtures had parent-hull interference, so those runs do not establish compliant-model validity"
+  },
+  "gripper_drive_limits_n": {
+    "left": 0.01,
+    "right": 0.5
+  },
+  "drive_limit_note": "Per-finger simulation effort caps; tuned for micro-part fixtures, not EPG hardware calibration"
+}

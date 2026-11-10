@@ -1,0 +1,2 @@
+# Install in .venv-lerobot; Isaac Sim uses its own Python.
+lerobot[dataset]==0.7.0

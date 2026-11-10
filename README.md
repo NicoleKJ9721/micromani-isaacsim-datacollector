@@ -13,6 +13,24 @@ This repository contains the MicroMani bimanual micromanipulator URDF assets, Is
 - LeRobot v3 dataset conversion with visual, state, action, and force/torque observations.
 - Isaac Sim extension: `micromani.data_collector`.
 
+## Local simulation recording (AppStation-aligned semantics)
+
+The local recorder now supports operator-side units, explicit gripper calibration,
+interactive episode save/discard/resume, simulation-step alignment, multi-episode
+LeRobot export, and contract-aware replay. Simulation provenance remains distinct
+from physical hardware data; encoder pulses are not fabricated.
+
+See [Local simulation recording workflow](docs/SIM_RECORDING_WORKFLOW.md).
+Run `LEROBOT_PYTHON=/path/to/python bash scripts/run_sim_checks.sh` for offline tests.
+The historical cloud smoke workflow below remains available separately.
+
+## Latest local platform update
+
+See [2026-11-10 status and limitations](docs/LOCAL_PROGRESS_20261110.md),
+[public control/sensor API](docs/SIM_API.md), and
+[three-camera monitor](docs/CAMERA_MONITOR.md).
+The assembly workflow is experimental; complete repeatable assembly is not yet verified.
+
 ## Quick Start
 
 Launch Isaac Sim with the extension search path:
@@ -57,3 +75,11 @@ scripts/run_local_checks.sh
 - Unity sender: `pico4_unity/MicroManiPicoTeleop.cs`
 - Gateway: `isaacsim_tools/micromani_pico_gateway.py`
 - Default flow: PICO-4 Unity app -> UDP `49100` -> gateway -> Isaac bridge UDP `49010`
+
+## 仿真传感器与控制 API
+
+默认启动同时提供本机 `http://127.0.0.1:49012`，统一读取三路图像、两路六维力/矩、四指接触力并控制双臂。每侧夹爪只有一个同步开合指令。接口与 Python 示例见 [docs/SIM_API.md](docs/SIM_API.md)。
+
+## 动态装配场景
+
+默认启动器使用 `outputs/assembly_physics/micromani_assembly.usda`。六个动态零件、TPU夹指摩擦、专用SDF碰撞和连续关节目标轨迹已接入。物理960Hz、传感器30Hz均按仿真时间计；不保证实时30FPS。参数与物理QA边界见 [docs/ASSEMBLY_PHYSICS.md](docs/ASSEMBLY_PHYSICS.md)。材料参数待实测标定，粗抓取保持不等于精密装配验收。
